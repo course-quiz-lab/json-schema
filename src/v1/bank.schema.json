@@ -10,6 +10,11 @@
       "title": "题目列表",
       "type": "array",
       "items": { "$ref": "#/$defs/question" }
+    },
+    "$schema": {
+      "type": "string",
+      "const": "https://course-quiz-lab.github.io/json-schema/v1/bank.schema.json",
+      "title": "JSON Schema"
     }
   },
   "additionalProperties": false,
