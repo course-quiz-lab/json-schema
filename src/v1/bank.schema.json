@@ -1,0 +1,150 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://course-quiz-lab.github.io/json-schema/v1/bank.schema.json",
+  "title": "题库",
+  "type": "object",
+  "required": ["metadata", "questions"],
+  "properties": {
+    "metadata": { "$ref": "#/$defs/metadata", "title": "元数据" },
+    "questions": {
+      "title": "题目列表",
+      "type": "array",
+      "items": { "$ref": "#/$defs/question" }
+    }
+  },
+  "additionalProperties": false,
+  "$defs": {
+    "metadata": {
+      "title": "元数据",
+      "type": "object",
+      "required": ["course", "author"],
+      "properties": {
+        "course": { "$ref": "#/$defs/course", "title": "课程信息" },
+        "author": { "type": "string", "minLength": 1, "title": "作者" },
+        "source": { "type": "string", "minLength": 1, "title": "来源" },
+        "publishedAt": {
+          "type": "string",
+          "format": "date-time",
+          "title": "发布时间"
+        }
+      },
+      "additionalProperties": false
+    },
+    "course": {
+      "title": "课程",
+      "type": "object",
+      "required": ["code", "name"],
+      "properties": {
+        "code": { "type": "string", "minLength": 1, "title": "课程代码" },
+        "name": { "type": "string", "minLength": 1, "title": "课程名称" },
+        "link": { "type": "string", "format": "uri", "title": "课程链接" }
+      },
+      "additionalProperties": false
+    },
+    "question": {
+      "title": "题目",
+      "allOf": [
+        {
+          "type": "object",
+          "required": ["type"],
+          "properties": {
+            "type": {
+              "type": "string",
+              "enum": ["single", "multiple", "boolean"],
+              "title": "题目类型"
+            }
+          }
+        },
+        {
+          "oneOf": [
+            { "$ref": "#/$defs/singleChoice" },
+            { "$ref": "#/$defs/multipleChoice" },
+            { "$ref": "#/$defs/booleanQuestion" }
+          ]
+        }
+      ]
+    },
+    "questionBase": {
+      "title": "题目基础字段",
+      "type": "object",
+      "required": ["type", "stem"],
+      "properties": {
+        "type": { "type": "string", "title": "题目类型" },
+        "stem": { "type": "string", "minLength": 1, "title": "题干" },
+        "id": { "type": "string", "minLength": 1, "title": "题目ID" },
+        "analysis": { "type": "string", "title": "解析" },
+        "difficulty": { "type": "string", "title": "难度" }
+      }
+    },
+    "options": {
+      "title": "选项",
+      "type": "object",
+      "minProperties": 2,
+      "patternProperties": {
+        "^[A-Z]$": { "type": "string", "minLength": 1, "title": "选项内容" }
+      },
+      "additionalProperties": false
+    },
+    "singleChoice": {
+      "title": "单选题",
+      "allOf": [
+        { "$ref": "#/$defs/questionBase" },
+        {
+          "type": "object",
+          "required": ["type", "options", "answer"],
+          "properties": {
+            "type": { "const": "single", "title": "题目类型" },
+            "options": { "$ref": "#/$defs/options", "title": "选项" },
+            "answer": {
+              "type": "string",
+              "pattern": "^[A-Z]$",
+              "title": "答案"
+            }
+          }
+        }
+      ],
+      "unevaluatedProperties": false
+    },
+    "multipleChoice": {
+      "title": "多选题",
+      "allOf": [
+        { "$ref": "#/$defs/questionBase" },
+        {
+          "type": "object",
+          "required": ["type", "options", "answer"],
+          "properties": {
+            "type": { "const": "multiple", "title": "题目类型" },
+            "options": { "$ref": "#/$defs/options", "title": "选项" },
+            "answer": {
+              "type": "array",
+              "minItems": 1,
+              "uniqueItems": true,
+              "items": {
+                "type": "string",
+                "pattern": "^[A-Z]$",
+                "title": "答案选项"
+              },
+              "title": "答案"
+            }
+          }
+        }
+      ],
+      "unevaluatedProperties": false
+    },
+    "booleanQuestion": {
+      "title": "判断题",
+      "allOf": [
+        { "$ref": "#/$defs/questionBase" },
+        {
+          "type": "object",
+          "required": ["type", "answer"],
+          "properties": {
+            "type": { "const": "boolean", "title": "题目类型" },
+            "answer": { "type": "boolean", "title": "答案" }
+          }
+        }
+      ],
+      "unevaluatedProperties": false
+    }
+  }
+}
