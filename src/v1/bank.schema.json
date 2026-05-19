@@ -55,7 +55,7 @@
           "properties": {
             "type": {
               "type": "string",
-              "enum": ["single", "multiple", "boolean"],
+              "enum": ["single", "multiple", "boolean", "indeterminate"],
               "title": "题目类型"
             }
           }
@@ -64,7 +64,8 @@
           "oneOf": [
             { "$ref": "#/$defs/singleChoice" },
             { "$ref": "#/$defs/multipleChoice" },
-            { "$ref": "#/$defs/booleanQuestion" }
+            { "$ref": "#/$defs/indeterminateChoice" },
+            { "$ref": "#/$defs/judgeQuestion" }
           ]
         }
       ]
@@ -91,7 +92,7 @@
       "additionalProperties": false
     },
     "singleChoice": {
-      "title": "单选题",
+      "title": "单项选择题",
       "allOf": [
         { "$ref": "#/$defs/questionBase" },
         {
@@ -111,7 +112,7 @@
       "unevaluatedProperties": false
     },
     "multipleChoice": {
-      "title": "多选题",
+      "title": "多项选择题",
       "allOf": [
         { "$ref": "#/$defs/questionBase" },
         {
@@ -136,7 +137,33 @@
       ],
       "unevaluatedProperties": false
     },
-    "booleanQuestion": {
+    "indeterminateChoice": {
+      "title": "不定向选择题",
+      "allOf": [
+        { "$ref": "#/$defs/questionBase" },
+        {
+          "type": "object",
+          "required": ["type", "options", "answer"],
+          "properties": {
+            "type": { "const": "indeterminate", "title": "题目类型" },
+            "options": { "$ref": "#/$defs/options", "title": "选项" },
+            "answer": {
+              "type": "array",
+              "minItems": 1,
+              "uniqueItems": true,
+              "items": {
+                "type": "string",
+                "pattern": "^[A-Z]$",
+                "title": "答案选项"
+              },
+              "title": "答案"
+            }
+          }
+        }
+      ],
+      "unevaluatedProperties": false
+    },
+    "judgeQuestion": {
       "title": "判断题",
       "allOf": [
         { "$ref": "#/$defs/questionBase" },
