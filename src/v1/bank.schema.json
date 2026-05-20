@@ -84,12 +84,9 @@
     },
     "options": {
       "title": "选项",
-      "type": "object",
-      "minProperties": 2,
-      "patternProperties": {
-        "^[A-Z]$": { "type": "string", "minLength": 1, "title": "选项内容" }
-      },
-      "additionalProperties": false
+      "type": "array",
+      "minItems": 2,
+      "items": { "type": "string", "minLength": 1, "title": "选项内容" }
     },
     "singleChoice": {
       "title": "单项选择题",
@@ -102,8 +99,8 @@
             "type": { "const": "single", "title": "题目类型" },
             "options": { "$ref": "#/$defs/options", "title": "选项" },
             "answer": {
-              "type": "string",
-              "pattern": "^[A-Z]$",
+              "type": "integer",
+              "minimum": 0,
               "title": "答案"
             }
           }
@@ -126,8 +123,8 @@
               "minItems": 1,
               "uniqueItems": true,
               "items": {
-                "type": "string",
-                "pattern": "^[A-Z]$",
+                "type": "integer",
+                "minimum": 0,
                 "title": "答案选项"
               },
               "title": "答案"
@@ -152,8 +149,8 @@
               "minItems": 1,
               "uniqueItems": true,
               "items": {
-                "type": "string",
-                "pattern": "^[A-Z]$",
+                "type": "integer",
+                "minimum": 0,
                 "title": "答案选项"
               },
               "title": "答案"
