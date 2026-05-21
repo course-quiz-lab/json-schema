@@ -1,0 +1,85 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://course-quiz-lab.github.io/json-schema/v1/index.schema.json",
+  "title": "题库索引",
+  "description": "题库索引的根对象，包含题库列表及更新时间",
+  "type": "object",
+  "required": ["banks", "updatedAt"],
+  "properties": {
+    "banks": {
+      "title": "题库列表",
+      "description": "题库索引条目数组，每一项代表一个题库的摘要信息",
+      "type": "array",
+      "items": {
+        "$ref": "#/$defs/bankIndex"
+      }
+    },
+    "updatedAt": {
+      "type": "string",
+      "format": "date-time",
+      "title": "更新时间",
+      "description": "题库索引的更新时间。格式：ISO 8601 日期时间字符串"
+    }
+  },
+  "additionalProperties": false,
+  "$defs": {
+    "bankIndex": {
+      "title": "题库索引条目",
+      "description": "单个题库的摘要信息，包含元数据和各题型题目数量",
+      "type": "object",
+      "required": ["metadata", "count", "url"],
+      "properties": {
+        "metadata": {
+          "$ref": "bank.schema.json#/$defs/metadata",
+          "title": "元数据",
+          "description": "题库的元数据对象，与 bank.schema.json 中的 metadata 定义一致"
+        },
+        "count": {
+          "$ref": "#/$defs/questionCount",
+          "title": "题目数量统计",
+          "description": "各题型的题目数量统计"
+        },
+        "url": {
+          "type": "string",
+          "format": "uri",
+          "title": "文件链接",
+          "description": "指向题库 JSON 文件的链接。格式：URI"
+        }
+      },
+      "additionalProperties": false
+    },
+    "questionCount": {
+      "title": "题目数量统计",
+      "description": "各题型的题目数量统计，每个字段对应一种题型，值为该题型的数量",
+      "type": "object",
+      "required": ["single", "multiple", "indeterminate", "judge"],
+      "properties": {
+        "single": {
+          "type": "integer",
+          "minimum": 0,
+          "title": "单选题数量",
+          "description": "单项选择题的数量。格式：非负整数"
+        },
+        "multiple": {
+          "type": "integer",
+          "minimum": 0,
+          "title": "多选题数量",
+          "description": "多项选择题的数量。格式：非负整数"
+        },
+        "indeterminate": {
+          "type": "integer",
+          "minimum": 0,
+          "title": "不定项选择题数量",
+          "description": "不定项选择题的数量。格式：非负整数"
+        },
+        "judge": {
+          "type": "integer",
+          "minimum": 0,
+          "title": "判断题数量",
+          "description": "判断题的数量。格式：非负整数"
+        }
+      },
+      "additionalProperties": false
+    }
+  }
+}
