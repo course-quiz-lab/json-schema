@@ -19,6 +19,11 @@
       "format": "date-time",
       "title": "更新时间",
       "description": "题库索引的更新时间。格式：ISO 8601 日期时间字符串"
+    },
+    "$schema": {
+      "type": "string",
+      "const": "https://course-quiz-lab.github.io/json-schema/v1/index.schema.json",
+      "title": "JSON Schema"
     }
   },
   "additionalProperties": false,
